@@ -3,9 +3,7 @@ package nl.yepp.bankapp.repository;
 import nl.yepp.bankapp.model.Customer;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SimpleInMemoryCustomerRepository implements CustomerRepository {
@@ -42,5 +40,10 @@ public class SimpleInMemoryCustomerRepository implements CustomerRepository {
     @Override
     public void deleteById(Long firstCustomerId) {
         customersById.remove(firstCustomerId);
+    }
+
+    @Override
+    public List<Customer> findAll() {
+        return new ArrayList(customersById.values());
     }
 }
