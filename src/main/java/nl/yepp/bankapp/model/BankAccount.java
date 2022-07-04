@@ -3,9 +3,10 @@ package nl.yepp.bankapp.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@JsonIgnoreProperties({ "owner" })
+@JsonIgnoreProperties({ "owners" })
 public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,8 +14,12 @@ public class BankAccount {
 
     private String name;
 
-    @ManyToOne
-    private Customer owner;
+    @ManyToMany
+    @JoinTable(
+            name = "customer_bank_account",
+            joinColumns = @JoinColumn(name = "bank_account_id"),
+            inverseJoinColumns = @JoinColumn(name = "owner_id"))
+    private List<Customer> owners;
 
     public Long getId() {
         return id;
@@ -32,11 +37,11 @@ public class BankAccount {
         this.name = name;
     }
 
-    public Customer getOwner() {
-        return owner;
+    public List<Customer> getOwners() {
+        return owners;
     }
 
-    public void setOwner(Customer owner) {
-        this.owner = owner;
+    public void setOwners(List<Customer> owners) {
+        this.owners = owners;
     }
 }

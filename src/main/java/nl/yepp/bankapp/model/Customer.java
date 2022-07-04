@@ -11,7 +11,7 @@ public class Customer {
     private String name;
     private String email;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owners")
     private List<BankAccount> bankAccounts;
 
     public Long getId() {
