@@ -14,11 +14,7 @@ public class BankAccount {
 
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "customer_bank_account",
-            joinColumns = @JoinColumn(name = "bank_account_id"),
-            inverseJoinColumns = @JoinColumn(name = "owner_id"))
+    @ManyToMany(mappedBy = "bankAccounts")
     private List<Customer> owners;
 
     public Long getId() {

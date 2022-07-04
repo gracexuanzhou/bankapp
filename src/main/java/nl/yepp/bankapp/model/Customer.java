@@ -11,7 +11,17 @@ public class Customer {
     private String name;
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "owners")
+    @ManyToMany(fetch = FetchType.EAGER, cascade =
+    {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.REFRESH,
+            CascadeType.PERSIST
+    })
+    @JoinTable(
+            name = "customer_bank_account",
+            joinColumns = @JoinColumn(name = "owner_id"),
+            inverseJoinColumns = @JoinColumn(name = "bank_account_id"))
     private List<BankAccount> bankAccounts;
 
     public Long getId() {
