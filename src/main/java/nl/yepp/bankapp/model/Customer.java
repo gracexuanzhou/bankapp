@@ -11,6 +11,9 @@ public class Customer {
     private String name;
     private String email;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
+    private List<BankAccount> bankAccounts;
+
     public Long getId() {
         return id;
     }
@@ -33,5 +36,13 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<BankAccount> getBankAccounts() {
+        return bankAccounts;
+    }
+
+    public void setBankAccounts(List<BankAccount> bankAccounts) {
+        this.bankAccounts = bankAccounts;
     }
 }
