@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface CustomerRepository {
     Customer save(Customer customer);
 
-    Optional<Customer> findById(Long firstCustomerId);
+    Optional<Customer> findById(Long customerId);
 
-    void deleteById(Long firstCustomerId);
+    void deleteById(Long customerId);
 
     List<Customer> findAll();
 }

@@ -33,13 +33,13 @@ public class SimpleInMemoryCustomerRepository implements CustomerRepository {
     }
 
     @Override
-    public Optional<Customer> findById(Long firstCustomerId) {
-        return Optional.ofNullable(customersById.get(firstCustomerId));
+    public Optional<Customer> findById(Long customerId) {
+        return Optional.ofNullable(customersById.get(customerId));
     }
 
     @Override
-    public void deleteById(Long firstCustomerId) {
-        customersById.remove(firstCustomerId);
+    public void deleteById(Long customerId) {
+        customersById.remove(customerId);
     }
 
     @Override

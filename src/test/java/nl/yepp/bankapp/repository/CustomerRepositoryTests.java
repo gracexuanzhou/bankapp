@@ -2,9 +2,15 @@ package nl.yepp.bankapp.repository;
 
 import nl.yepp.bankapp.model.Customer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,41 +25,50 @@ public class CustomerRepositoryTests {
     public static final Long SECOND_CUSTOMER_ID = 2L;
     public static final String SECOND_CUSTOMER_EMAIL = "jan@domain.nl";
     public static final String SECOND_CUSTOMER_NAME = "Jan van Bos";
-    CustomerRepository customerRepository = new SimpleInMemoryCustomerRepository();
 
-    @Test
-    void testCRUD() {
-        testRepoDoesNotHaveTheFirstCustomer();
+    private static Stream<Arguments> getImplementations() {
+        // TODO
+        // ApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+        // JPACustomerRepository jpaCustomerRepository = applicationContext.getBean(JPACustomerRepository.class);
+        return Stream.of(
+                Arguments.of(new SimpleInMemoryCustomerRepository())
+                //, Arguments.of(jpaCustomerRepository)
+        );
+    }
+    @ParameterizedTest
+    @MethodSource("getImplementations")
+    void testCRUD(CustomerRepository customerRepository) {
+        testRepoDoesNotHaveTheFirstCustomer(customerRepository);
 
-        testRepoIsEmpty();
+        testRepoIsEmpty(customerRepository);
 
-        testCreateTheFirstCustomer();
+        testCreateTheFirstCustomer(customerRepository);
 
-        testCreateTheSecondCustomer();
+        testCreateTheSecondCustomer(customerRepository);
 
-        testReadTheFirstCustomerAfterCreating();
+        testReadTheFirstCustomerAfterCreating(customerRepository);
 
-        testReadAllCustomers();
+        testReadAllCustomers(customerRepository);
 
-        testUpdateTheFirstCustomer();
+        testUpdateTheFirstCustomer(customerRepository);
 
-        testReadTheFirstCustomerAfterUpdating();
+        testReadTheFirstCustomerAfterUpdating(customerRepository);
 
-        testRemoveTheFirstCustomer();
+        testRemoveTheFirstCustomer(customerRepository);
 
-        testReadAllCustomersAfterRemovingTheFirst();
+        testReadAllCustomersAfterRemovingTheFirst(customerRepository);
     }
 
-    private void testRepoDoesNotHaveTheFirstCustomer() {
+    private void testRepoDoesNotHaveTheFirstCustomer(CustomerRepository customerRepository) {
         assertTrue(customerRepository.findById(FIRST_CUSTOMER_ID).isEmpty(), "The repo has to not have the first customer");
     }
 
-    private void testRepoIsEmpty() {
+    private void testRepoIsEmpty(CustomerRepository customerRepository) {
         List<Customer> all = customerRepository.findAll();
         assertNotNull(all);
         assertTrue(all.isEmpty(), "The repo has to be empty");
     }
-    private void testCreateTheFirstCustomer() {
+    private void testCreateTheFirstCustomer(CustomerRepository customerRepository) {
         Customer newCustomer = new Customer();
         newCustomer.setId(null);
         newCustomer.setEmail(FIRST_CUSTOMER_EMAIL);
@@ -65,7 +80,7 @@ public class CustomerRepositoryTests {
         assertEquals(newCustomer.getName(), savedCustomer.getName());
     }
 
-    private void testCreateTheSecondCustomer() {
+    private void testCreateTheSecondCustomer(CustomerRepository customerRepository) {
         Customer newCustomer = new Customer();
         newCustomer.setId(null);
         newCustomer.setEmail(SECOND_CUSTOMER_EMAIL);
@@ -77,7 +92,7 @@ public class CustomerRepositoryTests {
         assertEquals(newCustomer.getName(), savedCustomer.getName());
     }
 
-    private void testReadTheFirstCustomerAfterCreating() {
+    private void testReadTheFirstCustomerAfterCreating(CustomerRepository customerRepository) {
         Optional<Customer> customer = customerRepository.findById(FIRST_CUSTOMER_ID);
 
         assertFalse(customer.isEmpty(), "Customer has to exist");
@@ -85,7 +100,7 @@ public class CustomerRepositoryTests {
         assertEquals(FIRST_CUSTOMER_EMAIL, customer.get().getEmail());
     }
 
-    private void testReadAllCustomers() {
+    private void testReadAllCustomers(CustomerRepository customerRepository) {
         List<Customer> customers = customerRepository.findAll();
 
         assertNotNull(customers);
@@ -94,7 +109,7 @@ public class CustomerRepositoryTests {
         assertEquals(SECOND_CUSTOMER_ID, customers.get(1).getId(), "We expect the id of the second customer");
     }
 
-    private void testUpdateTheFirstCustomer() {
+    private void testUpdateTheFirstCustomer(CustomerRepository customerRepository) {
         Customer customerToUpdate = new Customer();
         customerToUpdate.setId(FIRST_CUSTOMER_ID);
         customerToUpdate.setEmail(FIRST_CUSTOMER_UPDATED_EMAIL);
@@ -108,7 +123,7 @@ public class CustomerRepositoryTests {
         assertEquals(customerToUpdate.getName(), updatedCustomer.getName());
     }
 
-    private void testReadTheFirstCustomerAfterUpdating() {
+    private void testReadTheFirstCustomerAfterUpdating(CustomerRepository customerRepository) {
         Optional<Customer> customer = customerRepository.findById(FIRST_CUSTOMER_ID);
 
         assertFalse(customer.isEmpty(), "Customer has to exist");
@@ -116,12 +131,12 @@ public class CustomerRepositoryTests {
         assertEquals(FIRST_CUSTOMER_UPDATED_EMAIL, customer.get().getEmail());
     }
 
-    private void testRemoveTheFirstCustomer() {
+    private void testRemoveTheFirstCustomer(CustomerRepository customerRepository) {
         customerRepository.deleteById(FIRST_CUSTOMER_ID);
-        testRepoDoesNotHaveTheFirstCustomer();
+        testRepoDoesNotHaveTheFirstCustomer(customerRepository);
     }
 
-    private void testReadAllCustomersAfterRemovingTheFirst() {
+    private void testReadAllCustomersAfterRemovingTheFirst(CustomerRepository customerRepository) {
         List<Customer> customers = customerRepository.findAll();
 
         assertNotNull(customers);
