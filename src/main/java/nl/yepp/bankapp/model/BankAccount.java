@@ -1,15 +1,17 @@
 package nl.yepp.bankapp.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-public class Customer {
+public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    private String email;
+
+    @ManyToOne
+    private Customer owner;
 
     public Long getId() {
         return id;
@@ -27,11 +29,11 @@ public class Customer {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public Customer getOwner() {
+        return owner;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setOwner(Customer owner) {
+        this.owner = owner;
     }
 }
