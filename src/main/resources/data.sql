@@ -1,0 +1,1 @@
+insert into customer(email, name) values ('bob@example.com', 'Bob Stevenson');
