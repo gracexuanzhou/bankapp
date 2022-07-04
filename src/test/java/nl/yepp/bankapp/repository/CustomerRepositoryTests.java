@@ -4,6 +4,7 @@ import nl.yepp.bankapp.model.Customer;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,7 +45,7 @@ public class CustomerRepositoryTests {
     }
 
     private void testRepoDoesNotHaveTheFirstCustomer() {
-        assertNull(customerRepository.findById(FIRST_CUSTOMER_ID), "The repo has to not have the first customer");
+        assertTrue(customerRepository.findById(FIRST_CUSTOMER_ID).isEmpty(), "The repo has to not have the first customer");
     }
 
     private void testRepoIsEmpty() {
@@ -77,11 +78,11 @@ public class CustomerRepositoryTests {
     }
 
     private void testReadTheFirstCustomerAfterCreating() {
-        Customer customer = customerRepository.findById(FIRST_CUSTOMER_ID);
+        Optional<Customer> customer = customerRepository.findById(FIRST_CUSTOMER_ID);
 
-        assertNotNull(customer, "Customer has to exist");
-        assertEquals(FIRST_CUSTOMER_NAME, customer.getName());
-        assertEquals(FIRST_CUSTOMER_EMAIL, customer.getEmail());
+        assertFalse(customer.isEmpty(), "Customer has to exist");
+        assertEquals(FIRST_CUSTOMER_NAME, customer.get().getName());
+        assertEquals(FIRST_CUSTOMER_EMAIL, customer.get().getEmail());
     }
 
     private void testReadAllCustomers() {
@@ -108,11 +109,11 @@ public class CustomerRepositoryTests {
     }
 
     private void testReadTheFirstCustomerAfterUpdating() {
-        Customer customer = customerRepository.findById(FIRST_CUSTOMER_ID);
+        Optional<Customer> customer = customerRepository.findById(FIRST_CUSTOMER_ID);
 
-        assertNotNull(customer, "Customer has to exist");
-        assertEquals(FIRST_CUSTOMER_UPDATED_NAME, customer.getName());
-        assertEquals(FIRST_CUSTOMER_UPDATED_EMAIL, customer.getEmail());
+        assertFalse(customer.isEmpty(), "Customer has to exist");
+        assertEquals(FIRST_CUSTOMER_UPDATED_NAME, customer.get().getName());
+        assertEquals(FIRST_CUSTOMER_UPDATED_EMAIL, customer.get().getEmail());
     }
 
     private void testRemoveTheFirstCustomer() {

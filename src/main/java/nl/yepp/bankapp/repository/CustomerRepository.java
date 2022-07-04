@@ -3,11 +3,12 @@ package nl.yepp.bankapp.repository;
 import nl.yepp.bankapp.model.Customer;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerRepository {
     Customer save(Customer customer);
 
-    Customer findById(Long firstCustomerId);
+    Optional<Customer> findById(Long firstCustomerId);
 
     void deleteById(Long firstCustomerId);
 

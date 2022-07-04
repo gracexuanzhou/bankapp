@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/customers")
@@ -24,10 +25,10 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> findById(@PathVariable Long id) {
-        Customer customer = customerRepository.findById(id);
-        if (customer == null)
+        Optional<Customer> customer = customerRepository.findById(id);
+        if (customer.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(customer, HttpStatus.OK);
+        return new ResponseEntity<>(customer.get(), HttpStatus.OK);
     }
 
     @PostMapping
