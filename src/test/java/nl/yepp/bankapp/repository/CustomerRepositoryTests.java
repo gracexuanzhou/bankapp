@@ -24,6 +24,8 @@ public class CustomerRepositoryTests {
     void testCRUD() {
         testRepoDoesNotHaveTheFirstCustomer();
 
+        testRepoIsEmpty();
+
         testCreateTheFirstCustomer();
 
         testCreateTheSecondCustomer();
@@ -45,6 +47,11 @@ public class CustomerRepositoryTests {
         assertNull(customerRepository.findById(FIRST_CUSTOMER_ID), "The repo has to not have the first customer");
     }
 
+    private void testRepoIsEmpty() {
+        List<Customer> all = customerRepository.findAll();
+        assertNotNull(all);
+        assertTrue(all.isEmpty(), "The repo has to be empty");
+    }
     private void testCreateTheFirstCustomer() {
         Customer newCustomer = new Customer();
         newCustomer.setId(null);
