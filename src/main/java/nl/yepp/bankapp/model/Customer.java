@@ -2,6 +2,7 @@ package nl.yepp.bankapp.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Customer {
@@ -54,5 +55,18 @@ public class Customer {
 
     public void setBankAccounts(List<BankAccount> bankAccounts) {
         this.bankAccounts = bankAccounts;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(id, customer.id) && Objects.equals(name, customer.name) && Objects.equals(email, customer.email) && Objects.equals(bankAccounts, customer.bankAccounts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, bankAccounts);
     }
 }

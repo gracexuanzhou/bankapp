@@ -1,5 +1,6 @@
 package nl.yepp.bankapp.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.yepp.bankapp.model.BankAccount;
 import nl.yepp.bankapp.model.Customer;
 import nl.yepp.bankapp.service.CustomerService;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -44,6 +46,28 @@ public class CustomerControllerTests {
         ;
     }
 
+    @Test
+    public void create() throws Exception {
+        Customer newCustomer = new Customer();
+        newCustomer.setEmail("new@example.com");
+        newCustomer.setName("New Customer");
+
+        Customer newCustomerWithId = new Customer();
+        newCustomerWithId.setId(10L);
+        newCustomerWithId.setEmail(newCustomer.getEmail());
+        newCustomerWithId.setName(newCustomer.getName());
+        given(this.customerService.createNew(newCustomer)).willReturn(newCustomerWithId);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/customers")
+                .content(asJsonString(newCustomer))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id", Matchers.equalTo(10)))
+                .andExpect(jsonPath("$.name", Matchers.equalTo("New Customer")))
+                .andExpect(jsonPath("$.email", Matchers.equalTo("new@example.com")));
+    }
+
     private Customer bob() {
         Customer bob = new Customer();
         bob.setId(1L);
@@ -66,4 +90,12 @@ public class CustomerControllerTests {
         alice.setEmail("alice@example.com");
         return alice;
     };
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
