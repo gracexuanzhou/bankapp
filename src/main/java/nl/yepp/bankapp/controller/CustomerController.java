@@ -1,4 +1,4 @@
-package nl.yepp.bankapp.contorller;
+package nl.yepp.bankapp.controller;
 
 import nl.yepp.bankapp.model.Customer;
 import nl.yepp.bankapp.repository.CustomerRepository;
