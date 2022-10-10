@@ -29,10 +29,11 @@ public class CustomerController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> findById(@PathVariable Long id) {
-        Optional<Customer> customer = customerService.findById(id);
-        if (customer.isEmpty())
+        Optional<Customer> customerOption = customerService.findById(id);
+        if (customerOption.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(customer.get(), HttpStatus.OK);
+        Customer customer = customerOption.get();
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PostMapping
